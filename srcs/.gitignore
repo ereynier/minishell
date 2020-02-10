@@ -1,0 +1,12 @@
+minishell.o
+parsing.o
+commande.o
+commande_line.o
+utils.o
+utils2.o
+utils_parsing.o
+dir_function.o
+env_function.o
+echo_function.o
+execve_function.o
+get_pwd.o
