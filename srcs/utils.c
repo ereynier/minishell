@@ -6,17 +6,14 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
-/*   Updated: 2020/02/14 15:40:12 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 18:50:38 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int			check_setvar(t_list *list, int print)
+int			check_setvar(t_list *list, int print, int i)
 {
-	int i;
-
-	i = 0;
 	if (((t_tag *)(list->content))->str[i] == '=')
 		return (0);
 	while (ft_isalpha(((t_tag *)(list->content))->str[i]) ||
@@ -27,6 +24,8 @@ int			check_setvar(t_list *list, int print)
 		else
 			return (1);
 	}
+	if ((print == 2 && !((t_tag *)(list->content))->str[i]))
+		return (1);
 	if (print && !ft_isalpha(((t_tag *)(list->content))->str[i]) &&
 		((t_tag *)(list->content))->str[i] != 0)
 	{

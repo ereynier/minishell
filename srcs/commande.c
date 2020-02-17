@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/04 13:17:22 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 15:03:10 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 19:54:11 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	set_lower_case(t_list *list, int i)
 	{
 		i = 0;
 		if (list && (((t_tag *)(list->content))->tag < 0 ||
-			!check_setvar(list, 0)))
+			!check_setvar(list, 0, 0)))
 		{
 			while (((t_tag *)(list->content))->str[i])
 			{

@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 11:33:40 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/16 19:54:31 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 18:51:07 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			check_line(t_list *list)
 	while (list && (((t_tag *)(list->content))->tag >= 0 ||
 	((t_tag *)(list->content))->tag == -32))
 	{
-		if (check_setvar(list, 0) || ((t_tag *)(list->content))->tag == -32)
+		if (check_setvar(list, 0, 0) || ((t_tag *)(list->content))->tag == -32)
 			list = list->next;
 		else
 			break ;

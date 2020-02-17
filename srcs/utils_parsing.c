@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
-/*   Updated: 2020/02/14 14:56:27 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 19:26:18 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	catch_command3(char *line, int *i, char *c, t_tag **command)
 			(*i)++;
 			break ;
 		}
-		if (line[*i] == '\\')
+		if (!(*c) && line[*i] == '\\' && line[(*i) + 1] != '$')
 			(*i)++;
 		if (!((*command)->str = ft_append((*command)->str, &line[*i], 1)))
 			return (1);

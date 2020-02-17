@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/15 16:53:28 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 16:24:28 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 16:59:40 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	ft_clear_remove_multi(t_list *lst)
 	ft_lstclear(&lst, &free);
 }
 
-int			ft_remove_all_multi_dir(int i, t_list *tmp)
+int			ft_remove_all_multi_dir(int i, t_list *tmp, int j)
 {
 	t_list	*del;
 	t_list	*prev;
@@ -35,13 +35,13 @@ int			ft_remove_all_multi_dir(int i, t_list *tmp)
 		tmp = tmp->next;
 		tmp = tmp->next;
 		prev->next = tmp;
-		ft_clear_remove_multi(del);
+		j > 0 ? ft_clear_remove_multi(del) : 0;
 		i--;
 	}
 	return (i);
 }
 
-int			ft_remove_all_multi_dirbis(int i, t_list *tmp)
+int			ft_remove_all_multi_dirbis(int i, t_list *tmp, int j)
 {
 	t_list	*del;
 	t_list	*prev;
@@ -58,13 +58,13 @@ int			ft_remove_all_multi_dirbis(int i, t_list *tmp)
 		tmp = tmp->next;
 		tmp = tmp->next;
 		prev->next = tmp;
-		ft_clear_remove_multi(del);
+		j > 0 ? ft_clear_remove_multi(del) : 0;
 		i--;
 	}
 	return (i);
 }
 
-int			ft_remove_all_multi_dir2bis(int i, t_list *tmp)
+int			ft_remove_all_multi_dir2bis(int i, t_list *tmp, int j)
 {
 	t_list	*del;
 	t_list	*prev;
@@ -77,13 +77,13 @@ int			ft_remove_all_multi_dir2bis(int i, t_list *tmp)
 		del = prev->next;
 		tmp = del->next->next->next;
 		prev->next = tmp;
-		ft_clear_remove_multi(del);
+		j > 0 ? ft_clear_remove_multi(del) : 0;
 		i--;
 	}
 	return (i);
 }
 
-int			ft_remove_all_multi_dir2(int i, t_list *tmp)
+int			ft_rmv_all_multi_dir2(int i, t_list *tmp, int j)
 {
 	t_list	*del;
 	t_list	*prev;
@@ -96,7 +96,7 @@ int			ft_remove_all_multi_dir2(int i, t_list *tmp)
 		del = prev->next;
 		tmp = del->next->next->next;
 		prev->next = tmp;
-		ft_clear_remove_multi(del);
+		j > 0 ? ft_clear_remove_multi(del) : 0;
 		i--;
 	}
 	return (i);

@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 17:02:23 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 13:53:01 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 18:50:35 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char		*append_line(t_list **command_list, t_list *env);
 int			echo_command(t_list *command_list, int fd, t_list *env);
 int			execve_command(t_list *command_list, t_list *env, char *cmd);
 int			ft_lstsize_nospace(t_list *lst);
-int			check_setvar(t_list *list, int print);
+int			check_setvar(t_list *list, int print, int i);
 int			preset_var(t_list *list, t_list *env, int set);
 char		**ft_lst_to_char(t_list *env);
 int			check_line(t_list *list);
@@ -78,11 +78,11 @@ int			call_command_norme(t_list **list, t_list ***command_list,
 int			ft_check_redir(t_list **command_list);
 int			ft_count_nb_redir(t_list *tmp);
 int			ft_count_nb_redir2(t_list *tmp);
-int			ft_remove_all_multi_dir(int i, t_list *tmp);
-int			ft_remove_all_multi_dir2(int i, t_list *tmp);
+int			ft_remove_all_multi_dir(int i, t_list *tmp, int j);
+int			ft_rmv_all_multi_dir2(int i, t_list *tmp, int j);
 void		ft_change_order_list(t_list *lst);
-int			ft_remove_all_multi_dirbis(int i, t_list *tmp);
-int			ft_remove_all_multi_dir2bis(int i, t_list *tmp);
+int			ft_remove_all_multi_dirbis(int i, t_list *tmp, int j);
+int			ft_remove_all_multi_dir2bis(int i, t_list *tmp, int j);
 void		ft_reset_redir(int in, int out);
 int			ft_change_dup_read(t_list *lst);
 int			ft_change_dup_write(t_list *lst);

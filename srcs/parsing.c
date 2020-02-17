@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
-/*   Updated: 2020/02/17 16:13:54 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 19:23:58 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int		check_quote(char *line)
 			c = '\'';
 		else if (line[i] == '\"' && (i == 0 || line[i - 1] != '\\'))
 			c = '\"';
-		if (line[i] == '\\' && line[i + 1])
+		if (line[i] == '\\' && line[i + 1] && line[i + 1] != '$')
 			i += 2;
 		else
 			i++;

@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/07 15:03:21 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/14 12:54:55 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 19:52:06 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static char	*get_env_var(char *buf, t_list *env)
 	{
 		if (!(tmp = ft_calloc(1, 1)))
 			return (0);
-		while (buf[i] && buf[i] != '$')
+		while ((buf[i] == '\\' && buf[i + 1] == '$' && i++) ||
+		(buf[i] && buf[i] != '$') || (i > 0 && buf[i - 1] == '\\'))
 			str = ft_append(str, &buf[i++], 1);
 		if (!buf[i])
 			return (str);
@@ -62,8 +63,7 @@ char		*append_line(t_list **command_list, t_list *env)
 	while (*command_list && ((t_tag *)((*command_list)->content))->tag >= 0)
 	{
 		buf = ((t_tag *)((*command_list)->content))->str;
-		if (((t_tag *)((*command_list)->content))->tag != 34 &&
-		((t_tag *)((*command_list)->content))->str[0] != '$')
+		if (((t_tag *)((*command_list)->content))->tag == 39)
 			str = ft_append(str, buf, ft_strlen(buf));
 		else
 		{

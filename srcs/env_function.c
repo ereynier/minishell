@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 06:29:53 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/14 15:24:54 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 18:50:56 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ int				unset_command(t_list *command_list, t_list *env)
 			command_list = command_list->next;
 		if (!command_list || ((t_tag *)(command_list->content))->tag < 0)
 			break ;
-		if (check_setvar(command_list, 1))
+		if (check_setvar(command_list, 2, 0))
 		{
+			ft_printf("%s", ((t_tag *)(command_list->content))->str);
 			str = append_line(&command_list, env);
 			env = ft_unset(str, env);
 		}
@@ -78,7 +79,7 @@ int				export_command(t_list *list, t_list *env)
 		list = list->next;
 		while (list && ((t_tag *)(list->content))->tag >= 0)
 		{
-			if ((ret = check_env(list, env)) || (check_setvar(list, 1)))
+			if ((ret = check_env(list, env)) || (check_setvar(list, 1, 0)))
 			{
 				if (ret != 2)
 					preset_var(list, env, 1);

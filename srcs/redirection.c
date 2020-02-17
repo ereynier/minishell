@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 11:55:35 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 16:39:05 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/17 18:50:26 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static t_list		*ft_change_first_caract(t_list **list)
 }
 
 static t_list		*ft_resize_cmd_for_dir(t_list **list, t_list *t,
-					t_list *ret)
+					t_list *ret, int i)
 {
 	t_list	*back;
 	t_list	*prev;
@@ -62,15 +62,15 @@ static t_list		*ft_resize_cmd_for_dir(t_list **list, t_list *t,
 		ret = ft_change_first_caract(list);
 	back = *list;
 	prev = back;
-	while (back)
+	while (back && ++i)
 	{
 		t = prev;
 		while (back && ((t_tag *)(back->content))->tag != -59)
 			back = back->next;
-		ft_remove_all_multi_dir(ft_count_nb_redir(t->next), t);
-		ft_remove_all_multi_dirbis(ft_count_nb_redir(t->next), t);
-		ft_remove_all_multi_dir2(ft_count_nb_redir2(t->next), t);
-		ft_remove_all_multi_dir2bis(ft_count_nb_redir2(t->next), t);
+		!i ? ft_remove_all_multi_dir(ft_count_nb_redir(t->next), t, i) : 0;
+		!i ? ft_remove_all_multi_dirbis(ft_count_nb_redir(t->next), t, i) : 0;
+		i ? 0 : ft_rmv_all_multi_dir2(ft_count_nb_redir2(t->next), t, i);
+		i ? 0 : ft_remove_all_multi_dir2bis(ft_count_nb_redir2(t->next), t, i);
 		prev = back;
 		back && ((t_tag *)(back->content))->tag == -59 ? back = back->next : 0;
 	}
@@ -105,7 +105,7 @@ int					ft_verif_redir(t_list *list, t_list **command_list,
 	if (ft_check_redir(command_list))
 		return (ft_printf_fd(2, "\033[1;31mminishell\033[0m: error open \
 		file\n"));
-	free = ft_resize_cmd_for_dir(command_list, *command_list, NULL);
+	free = ft_resize_cmd_for_dir(command_list, *command_list, NULL, -1);
 	tmp = *command_list;
 	if (((t_tag *)(tmp->content))->tag == -62 ||
 		((t_tag *)(tmp->content))->tag == -63 ||
