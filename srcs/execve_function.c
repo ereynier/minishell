@@ -1,104 +1,86 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   execve_function.c                                .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: jacens <jacens@student.le-101.fr>          +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/07 15:45:52 by jacens       #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/09 18:02:25 by jacens      ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execve_function.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/07 15:45:52 by jacens            #+#    #+#             */
+/*   Updated: 2020/02/16 19:54:25 by jacens           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	ft_free_foo(char **foo, int j)
+static char	*ft_free_split_ret(char **split, int i)
 {
-	int i;
+	while (split[++i])
+		free(split[i]);
+	free(split);
+	return (NULL);
+}
+
+static char	*ft_config_cmd_path(char **split, char *cmd, char *ret)
+{
+	int			i;
+	char		*tmp;
+	struct stat	sb;
 
 	i = -1;
-	if (j == 1)
+	if (!cmd)
 	{
-		if (foo[0])
+		ft_free_foo(split, 2);
+		return (ft_strdup(ret));
+	}
+	while (split[++i])
+	{
+		split[i] = ft_strjoin(split[i], cmd);
+		if (split[i] == NULL)
+			return (ft_free_split_ret(split, i));
+		if (stat(split[i], &sb) != -1)
 		{
-			free(foo[0]);
-			foo[0] = NULL;
+			tmp = split[i];
+			ft_free_split_ret(split, i);
+			return (tmp);
 		}
 	}
-	// else
-	// 	while (foo[++i])
-	// 	{
-	// 		free(foo[i]);
-	// 		foo[i] = NULL;
-	// 	}
-	free(foo);
-	foo = NULL;
-	return (0);
+	return (ft_strdup(ret));
 }
 
-static int	ft_change_value_str(t_list *lst, t_list *env, char **foo)
+static char	*ft_cmd_path_check(char *path, char *cmd)
 {
-	char	*tmp;
+	char		*tmp;
+	char		**split;
+	struct stat	sb;
 
-	while (((t_tag *)(env->content)) &&
-	ft_strncmp(((t_tag *)(env->content))->str, "HOME", 5) != 0)
-		env = env->next;
-	if (!(tmp = ft_strjoin(((t_tag *)(env->content))->value,
-	&((t_tag *)(lst->content))->str[1])))
-		return (ft_free_foo(foo, 1));
-	free(((t_tag *)(lst->content))->str);
-	((t_tag *)(lst->content))->str = tmp;
-	return (1);
-}
-
-char		**ft_lst_to_foo(char **foo, char *tmp, t_list *lst, t_list *env)
-{
-	int		i;
-	int		j;
-
-	j = ft_lstsize_nospace(lst) + 1;
-	if (!(foo = malloc(j)))
+	tmp = NULL;
+	split = NULL;
+	if (!path)
+		return (cmd);
+	if (!(split = ft_split(path, ':')))
 		return (NULL);
-	i = j;
-	while (--i > 0)
-		foo[i] = NULL;
-	foo[i] = tmp;
-	while (++i < j - 1)
-	{
-		lst = lst->next;
-		if (!strncmp(((t_tag *)(lst->content))->str, "~", 1) &&
-		!((t_tag *)(lst->content))->tag)
-			if (!ft_change_value_str(lst, env, foo))
-				return (NULL);
-		foo[i] = ((t_tag *)(lst->content))->str;
-		lst = lst->next;
-	}
-	foo[i] = NULL;
-	return (foo);
+	if (stat(cmd, &sb) == -1)
+		return (ft_config_cmd_path(split, ft_strjoin("/", cmd), cmd));
+	return (ft_strdup(cmd));
 }
 
-static int	config_foo(char *tmp, t_list *lst, t_list *env)
+static int	set_value_env(int status, t_list *env)
 {
-	char	**foo;
-	char	**envp;
-	int		ret;
-
-	foo = NULL;
-	if (!(envp = ft_lst_to_char(env)))
-		;
-	if (!(foo = ft_lst_to_foo(foo, tmp, lst, env)))
-		ft_free_foo(envp, 2);
-	ret = execve(foo[0], foo, NULL);
-	if (ret == -1)
-	{
-		ft_printf("\033[1;31mminishell\033[0m: %s %s\n",
-		"no such file or directory:", foo[0]);
-		ft_free_foo(envp, 2);
-		return (ft_free_foo(foo, 1));
-	}
-	ft_free_foo(foo, 1);
-	return (ft_free_foo(envp, 2) + 1);
+	if (fill_ret_env(env, 0))
+		return (1);
+	if (status == 2)
+		if (fill_ret_env(env, 130))
+			return (1);
+	if (status == 3)
+		if (fill_ret_env(env, 131))
+			return (1);
+	if (status == 65280)
+		if (fill_ret_env(env, 127))
+			return (1);
+	if (status == 256)
+		if (fill_ret_env(env, 1))
+			return (1);
+	return (0);
 }
 
 int			execve_command(t_list *command_list, t_list *env, char *cmd)
@@ -106,16 +88,26 @@ int			execve_command(t_list *command_list, t_list *env, char *cmd)
 	char	*tmp;
 	pid_t	pid;
 	int		status;
+	t_list	*lst;
 
+	ft_signal(0);
 	pid = fork();
 	if (pid == 0)
 	{
-		tmp = (ft_strncmp(cmd, "/bin/", 5) != 0 ?
-		ft_strjoin("/bin/", cmd) : ft_strdup(cmd));
+		ft_signal(1);
+		lst = env;
+		while (((t_tag *)(lst->content)) &&
+		ft_strncmp(((t_tag *)(lst->content))->str, "PATH", 5) != 0)
+			lst = lst->next;
+		if (!(tmp = ft_cmd_path_check(((t_tag *)(lst->content))->value, cmd)))
+			exit(-1);
 		if (!(config_foo(tmp, command_list, env)))
-			return (0);
+			exit(-1);
+		exit(0);
 	}
-	else
-		wait(&status);
-	return (1);
+	wait(&status);
+	if (set_value_env(status, env))
+		return (1);
+	ft_signal(2);
+	return (0);
 }

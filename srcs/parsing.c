@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   parsing.c                                        .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: jacens <jacens@student.le-101.fr>          +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/03 14:40:00 by ereynier     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 19:05:33 by jacens      ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
+/*   Updated: 2020/02/17 16:13:54 by jacens           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -23,7 +22,7 @@ static int		check_quote2(char *line, int *i, char c)
 		return (1);
 	if (c)
 		(*i)++;
-	if ((!line[1] && line[0] == '\\') ||(line[*i] == '\\' && !line[*i + 1]))
+	if ((!line[1] && line[0] == '\\') || (line[*i] == '\\' && !line[*i + 1]))
 		return (1);
 	return (0);
 }
@@ -94,31 +93,15 @@ static int		catch_command(char *line, t_list **command_list)
 		command->str[0] = 0;
 		command->tag = 0;
 		command->value = 0;
-		if (line[i] == ';' || line[i] == '<' || line[i] == '>' ||
-		line[i] == '|' || line[i] == ' ')
-		{
-			if (catch_command4(line, &i, &command))
-				return (1);
-		}
-		else
-		{
-			if (catch_command2(line, &i, &c, &command))
-				return (1);
-		}
+		if (catch_command_norme(line, &i, &c, &command))
+			return (1);
 		if (*command->str)
-			ft_lstadd_back(command_list ,ft_lstnew(command));
+			ft_lstadd_back(command_list, ft_lstnew(command));
 	}
-	t_list *ptr = *command_list;//////////////
-	while (ptr)////////////////////////
-	{///////////////////////////////////////
-		printf("\033[0;35m%s, %d\033[0m\n", ((t_tag *)(ptr->content))->str,////////
-		((t_tag *)(ptr->content))->tag);///////////// AFFICHE LISTE CHAINEE
-		ptr = ptr->next;///////////////////////
-	}/////////////////////////////
 	return (0);
 }
 
-int			analyse(char *line, t_list *env)
+int				analyse(char *line, t_list **env)
 {
 	t_list *command_list;
 
@@ -127,8 +110,10 @@ int			analyse(char *line, t_list *env)
 		return (1);
 	if (check_guillemets(line))
 		return (1);
+	if (check_pipe(line))
+		return (1);
 	catch_command(line, &command_list);
-	call_command(command_list, env);
+	call_command(&command_list, env);
 	ft_lstclear(&command_list, &free);
 	return (0);
 }

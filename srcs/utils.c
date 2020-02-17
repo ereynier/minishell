@@ -1,29 +1,41 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   utils.c                                          .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: jacens <jacens@student.le-101.fr>          +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/03 14:40:00 by ereynier     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/09 14:47:58 by jacens      ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
+/*   Updated: 2020/02/14 15:40:12 by jacens           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int 		check_setvar(t_list *list)
+int			check_setvar(t_list *list, int print)
 {
 	int i;
-	
+
 	i = 0;
-	while (((t_tag *)(list->content))->str[i])
+	if (((t_tag *)(list->content))->str[i] == '=')
+		return (0);
+	while (ft_isalpha(((t_tag *)(list->content))->str[i]) ||
+		((t_tag *)(list->content))->str[i] == '=')
 	{
 		if (((t_tag *)(list->content))->str[i] != '=')
 			i++;
 		else
 			return (1);
+	}
+	if (print && !ft_isalpha(((t_tag *)(list->content))->str[i]) &&
+		((t_tag *)(list->content))->str[i] != 0)
+	{
+		ft_printf("\033[1;31mminishell\033[0m: export: `");
+		i = 0;
+		while (((t_tag *)(list->content))->str[i] &&
+		((t_tag *)(list->content))->str[i] != '=')
+			ft_putchar(((t_tag *)(list->content))->str[i++]);
+		ft_printf("': not a valid identifier\n");
 	}
 	return (0);
 }
@@ -33,11 +45,12 @@ int			ft_lstsize_nospace(t_list *lst)
 	int i;
 
 	i = 1;
-	while (lst && ((t_tag *)(lst->content))->tag != -59)
+	while (lst && (((t_tag *)(lst->content))->tag >= 0 ||
+	((t_tag *)(lst->content))->tag == -32))
 	{
 		if (lst && ((t_tag *)(lst->content))->tag == -32)
 			lst = lst->next;
-		if (lst && ((t_tag *)(lst->content))->tag != -59)
+		if (lst && ((t_tag *)(lst->content))->tag >= 0)
 		{
 			i++;
 			lst = lst->next;
@@ -51,15 +64,15 @@ static int	envtab_to_envlst2(t_tag **tag)
 	if (!(*tag = malloc(sizeof(t_tag))))
 		return (1);
 	if (!((*tag)->str = malloc(1)))
+	{
+		free(*tag);
 		return (1);
+	}
 	(*tag)->str[0] = 0;
-	if (!((*tag)->value = malloc(1)))
-		return (1);
-	(*tag)->value[0] = 0;
 	return (0);
 }
 
-t_list		*envtab_to_envlst(char **envp)
+t_list		**envtab_to_envlst(char **envp)
 {
 	t_list	**env;
 	t_tag	*tag;
@@ -83,7 +96,7 @@ t_list		*envtab_to_envlst(char **envp)
 		tag->tag = 1;
 		ft_lstadd_back(env, ft_lstnew(tag));
 	}
-	return (*env);
+	return (env);
 }
 
 char		*ft_append(char *dst, char *src, int size)
@@ -108,5 +121,6 @@ char		*ft_append(char *dst, char *src, int size)
 		j++;
 	}
 	tmp[i + j] = 0;
+	free(dst);
 	return (tmp);
 }

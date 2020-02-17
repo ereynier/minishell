@@ -1,13 +1,1 @@
-ft_check_va.o
-ft_config_stru.o
-ft_flags_printf.o
-ft_pre_cas_d.o
-ft_pre_cas_d_.o
-ft_pre_cas_d_2.o
-ft_pre_cas_d_3.o
-ft_pre_cas_d_4.o
-ft_pre_printf.o
-ft_printf_outils.o
-ft_printf_outils2.o
-ft_printf_outils3.o
-ft_printf.o
+*.o

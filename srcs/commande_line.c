@@ -1,21 +1,20 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   commande_line.c                                  .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: jacens <jacens@student.le-101.fr>          +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/07 15:03:21 by jacens       #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/09 13:41:36 by jacens      ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commande_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/07 15:03:21 by jacens            #+#    #+#             */
+/*   Updated: 2020/02/14 12:54:55 by jacens           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 char		*ft_getvalue(char *str, t_list *env)
 {
-	while(env)
+	while (env)
 	{
 		if (!ft_strcmp(((t_tag *)(env->content))->str, str))
 			return (((t_tag *)(env->content))->value);
@@ -24,28 +23,27 @@ char		*ft_getvalue(char *str, t_list *env)
 	return ("");
 }
 
-
-static char *get_env_var(char *buf, t_list *env)
+static char	*get_env_var(char *buf, t_list *env)
 {
-	char *str;
-	char *tmp;
-	int i;
+	char	*str;
+	char	*tmp;
+	int		i;
+	int		j;
 
 	i = 0;
-	if (!(str = malloc(1)))
+	if (!(str = ft_calloc(1, 1)))
 		return (0);
-	str[0] = 0;
 	while (1)
 	{
-		if (!(tmp = malloc(1)))
+		if (!(tmp = ft_calloc(1, 1)))
 			return (0);
-		tmp[0] = 0;
 		while (buf[i] && buf[i] != '$')
 			str = ft_append(str, &buf[i++], 1);
 		if (!buf[i])
 			return (str);
-		i++;
-		while (buf[i] && ft_isalnum(buf[i]))
+		j = ++i;
+		while (((buf[i] && ft_isalpha(buf[i])) ||
+			(buf[i] == '?' && !buf[j + 1])))
 			tmp = ft_append(tmp, &buf[i++], 1);
 		str = ft_append(str,
 		ft_getvalue(tmp, env), ft_strlen(ft_getvalue(tmp, env)));
@@ -53,13 +51,14 @@ static char *get_env_var(char *buf, t_list *env)
 	}
 }
 
-char 		*append_line(t_list **command_list, t_list *env)
+char		*append_line(t_list **command_list, t_list *env)
 {
 	char *str;
 	char *buf;
+
 	if (!(str = malloc(1)))
-			return (0);
-		str[0] = 0;
+		return (0);
+	str[0] = 0;
 	while (*command_list && ((t_tag *)((*command_list)->content))->tag >= 0)
 	{
 		buf = ((t_tag *)((*command_list)->content))->str;
@@ -77,10 +76,31 @@ char 		*append_line(t_list **command_list, t_list *env)
 	return (str);
 }
 
-int			reconfig_command(t_list **command_list, t_list *env, int nb)
+static void	reconfig_norme(t_list ***command_list, t_list **env, t_list **tmp)
 {
+	int		nb;
 	char	*str;
 	t_list	*prev;
+
+	nb = ((t_tag *)((**command_list)->content))->tag;
+	str = append_line(*command_list, *env);
+	free(((t_tag *)((*tmp)->content))->str);
+	((t_tag *)((*tmp)->content))->str = str;
+	((t_tag *)((*tmp)->content))->value = 0;
+	((t_tag *)((*tmp)->content))->tag = nb;
+	while (*tmp && (*tmp)->next &&
+		((t_tag *)((*tmp)->next->content))->tag >= 0)
+	{
+		prev = *tmp;
+		(*tmp) = (*tmp)->next;
+		prev->next = (*tmp)->next;
+		ft_lstdelone(*tmp, free);
+		*tmp = prev;
+	}
+}
+
+int			reconfig_command(t_list **command_list, t_list *env)
+{
 	t_list	*tmp;
 	t_list	*start;
 
@@ -90,20 +110,7 @@ int			reconfig_command(t_list **command_list, t_list *env, int nb)
 	{
 		if (((t_tag *)(tmp->content))->tag >= 0)
 		{
-			nb = ((t_tag *)((*command_list)->content))->tag;
-			str = append_line(command_list, env);
-			free(((t_tag *)(tmp->content))->str);
-			((t_tag *)(tmp->content))->str = str;
-			((t_tag *)(tmp->content))->value = 0;
-			((t_tag *)(tmp->content))->tag = nb;
-			while (tmp && tmp->next && ((t_tag *)(tmp->next->content))->tag >= 0)
-			{
-				prev = tmp;
-				(tmp) = (tmp)->next;
-				prev->next = (tmp)->next;
-				ft_lstdelone(tmp, free);
-				tmp = prev;
-			}
+			reconfig_norme(&command_list, &env, &tmp);
 		}
 		else
 			*command_list = (*command_list)->next;
