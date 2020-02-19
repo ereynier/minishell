@@ -53,7 +53,6 @@ int				unset_command(t_list *command_list, t_list *env)
 			break ;
 		if (check_setvar(command_list, 2, 0))
 		{
-			ft_printf("%s", ((t_tag *)(command_list->content))->str);
 			str = append_line(&command_list, env);
 			env = ft_unset(str, env);
 		}
