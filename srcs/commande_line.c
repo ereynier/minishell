@@ -41,7 +41,7 @@ static char	*get_env_var(char *buf, t_list *env)
 		(buf[i] && buf[i] != '$') || (i > 0 && buf[i - 1] == '\\'))
 			str = ft_append(str, &buf[i++], 1);
 		if (!buf[i])
-			return (str);
+			return (love_the_norme(str, tmp));
 		j = ++i;
 		while (((buf[i] && ft_isalpha(buf[i])) ||
 			(buf[i] == '?' && !buf[j + 1])))
@@ -97,6 +97,7 @@ static void	reconfig_norme(t_list ***command_list, t_list **env, t_list **tmp)
 		ft_lstdelone(*tmp, free);
 		*tmp = prev;
 	}
+
 }
 
 int			reconfig_command(t_list **command_list, t_list *env)

@@ -36,3 +36,9 @@ int			call_command_norme(t_list **list, t_list ***command_list,
 	(void)command_list;
 	return (0);
 }
+
+char		*love_the_norme(char *str, char *tmp)
+{
+	free(tmp);
+	return (str);
+}

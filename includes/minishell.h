@@ -89,4 +89,5 @@ int			ft_change_dup_write(t_list *lst);
 void		ft_remove_start_dir(t_list **lst);
 void		ft_change_order_more(t_list *sp, t_list *redir,
 			t_list *redirsp, t_list *file);
+char		*love_the_norme(char *str, char *tmp);
 #endif
