@@ -97,7 +97,6 @@ static void	reconfig_norme(t_list ***command_list, t_list **env, t_list **tmp)
 		ft_lstdelone(*tmp, free);
 		*tmp = prev;
 	}
-
 }
 
 int			reconfig_command(t_list **command_list, t_list *env)
