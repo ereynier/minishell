@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/11 17:28:59 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 11:26:27 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/22 18:10:47 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ void		chdir_home_cmd(t_list *command_list, t_list *env,
 	int		nb;
 	int		i;
 
-	while (((t_tag *)(env->content)) &&
-	ft_strncmp(((t_tag *)(env->content))->str, "HOME", 5) != 0)
+	while (env && ft_strncmp(((t_tag *)(env->content))->str, "HOME", 5) != 0)
 		env = env->next;
 	if (env && ((t_tag *)(env->content))->tag == 1)
 	{
@@ -58,20 +57,20 @@ int			ft_lst_env_pwd(t_list *lst, char *old)
 	t_list	*tmp;
 
 	tmp = lst;
-	while (((t_tag *)(tmp->content)) &&
+	while (tmp &&
 	ft_strncmp(((t_tag *)(tmp->content))->str, "OLDPWD", 7) != 0)
 		tmp = tmp->next;
-	if (((t_tag *)(tmp->content)) && old)
+	if (tmp && old)
 	{
 		free(((t_tag *)(tmp->content))->value);
 		if (!(((t_tag *)(tmp->content))->value = ft_strdup(old)))
 			return (0);
 	}
 	tmp = lst;
-	while (((t_tag *)(tmp->content)) &&
+	while (tmp &&
 	ft_strncmp(((t_tag *)(tmp->content))->str, "PWD", 4) != 0)
 		tmp = tmp->next;
-	if (((t_tag *)(tmp->content)))
+	if (tmp)
 	{
 		free(((t_tag *)(tmp->content))->value);
 		if (!(((t_tag *)(tmp->content))->value = ft_get_pwd()))

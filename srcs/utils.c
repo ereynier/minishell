@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
-/*   Updated: 2020/02/17 18:50:38 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 12:31:40 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ int			ft_lstsize_nospace(t_list *lst)
 	((t_tag *)(lst->content))->tag == -32))
 	{
 		if (lst && ((t_tag *)(lst->content))->tag == -32)
-			lst = lst->next;
+			lst = skip_redir_go_next(lst);
 		if (lst && ((t_tag *)(lst->content))->tag >= 0)
 		{
 			i++;
-			lst = lst->next;
+			lst = skip_redir_go_next(lst);
 		}
 	}
 	return (i);

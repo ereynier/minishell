@@ -6,11 +6,17 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/11 14:03:12 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/16 19:54:22 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 12:25:02 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int			free_int(void *str)
+{
+	free(str);
+	return (1);
+}
 
 static int	ft_change_value_str(t_list *lst, t_list *env, char **foo)
 {
@@ -41,13 +47,13 @@ static char	**ft_lst_to_foo(char **foo, char *tmp, t_list *lst, t_list *env)
 	foo[i] = tmp;
 	while (++i < j - 1)
 	{
-		lst = lst->next;
+		lst = skip_redir_go_next(lst);
 		if (!strncmp(((t_tag *)(lst->content))->str, "~", 1) &&
 		!((t_tag *)(lst->content))->tag)
 			if (!ft_change_value_str(lst, env, foo))
 				return (NULL);
 		foo[i] = ((t_tag *)(lst->content))->str;
-		lst = lst->next;
+		lst = skip_redir_go_next(lst);
 	}
 	foo[i] = NULL;
 	return (foo);

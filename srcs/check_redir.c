@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 16:55:36 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/16 12:24:39 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 04:49:57 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,20 @@ int			ft_check_redir(t_list **command_list)
 	int		fileopen;
 
 	tmp = *command_list;
-	while (tmp)
+	backup = tmp;
+	fileopen = 0;
+	while (tmp && ((t_tag *)(tmp->content))->tag != -59)
 	{
-		backup = tmp;
-		fileopen = 0;
-		while (tmp && ((t_tag *)(tmp->content))->tag != -59)
-		{
-			if (fileopen >= 0 && (((t_tag *)(tmp->content))->tag == -62 ||
-				((t_tag *)(tmp->content))->tag == -63))
-				fileopen = ft_open_file_dir(fileopen, tmp);
-			else if (((t_tag *)(tmp->content))->tag == -60)
-				if (ft_verif_exist_file(((t_tag *)(tmp->next->content))->str))
-					return (1);
-			tmp = tmp->next;
-		}
-		if (fileopen == -1)
-			return (1);
-		tmp ? tmp = tmp->next : 0;
+		if (fileopen >= 0 && (((t_tag *)(tmp->content))->tag == -62 ||
+			((t_tag *)(tmp->content))->tag == -63))
+			fileopen = ft_open_file_dir(fileopen, tmp);
+		else if (((t_tag *)(tmp->content))->tag == -60)
+			if (ft_verif_exist_file(((t_tag *)(tmp->next->content))->str))
+				return (1);
+		tmp = tmp->next;
 	}
+	if (fileopen == -1)
+		return (1);
+	tmp ? tmp = tmp->next : 0;
 	return (0);
 }

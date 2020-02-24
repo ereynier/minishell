@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/03 14:40:00 by ereynier          #+#    #+#             */
-/*   Updated: 2020/02/17 19:23:58 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/20 18:14:56 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int		check_guillemets(char *line)
 			j = i + 1;
 			while (line[j] && ft_iswspace(line[j]))
 				j++;
-			if (!line[j] || line[j] == '\n' || line[j] == ';')
+			if (!line[j] || line[j] == '\n' || line[j] == ';' || line[j] == '|')
 				return (1);
 		}
 		i++;

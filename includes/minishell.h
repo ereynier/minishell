@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 17:02:23 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 18:50:35 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 12:40:22 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,9 @@ int			call_command_norme(t_list **list, t_list ***command_list,
 int			ft_check_redir(t_list **command_list);
 int			ft_count_nb_redir(t_list *tmp);
 int			ft_count_nb_redir2(t_list *tmp);
-int			ft_remove_all_multi_dir(int i, t_list *tmp, int j);
-int			ft_rmv_all_multi_dir2(int i, t_list *tmp, int j);
+void		ft_remove_all_multi_dir(int i, t_list *tmp);
+void		ft_rmv_all_multi_dir(int i, t_list *tmp);
 void		ft_change_order_list(t_list *lst);
-int			ft_remove_all_multi_dirbis(int i, t_list *tmp, int j);
-int			ft_remove_all_multi_dir2bis(int i, t_list *tmp, int j);
 void		ft_reset_redir(int in, int out);
 int			ft_change_dup_read(t_list *lst);
 int			ft_change_dup_write(t_list *lst);
@@ -90,4 +88,8 @@ void		ft_remove_start_dir(t_list **lst);
 void		ft_change_order_more(t_list *sp, t_list *redir,
 			t_list *redirsp, t_list *file);
 char		*love_the_norme(char *str, char *tmp);
+t_list		*skip_redir_go_next(t_list *lst);
+t_list		*skip_redir_go_next_com(t_list *lst);
+t_list		*skip_redir_to_go_next(t_list *lst);
+int			free_int(void *str);
 #endif

@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 06:29:53 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 18:50:56 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 12:40:15 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ static t_list	*ft_unset(char *str, t_list *env)
 int				unset_command(t_list *command_list, t_list *env)
 {
 	char	*str;
-	int		i;
 
-	i = 0;
 	while (1)
 	{
 		if (!(str = malloc(1)))
@@ -53,6 +51,7 @@ int				unset_command(t_list *command_list, t_list *env)
 			break ;
 		if (check_setvar(command_list, 2, 0))
 		{
+			free(str);
 			str = append_line(&command_list, env);
 			env = ft_unset(str, env);
 		}
@@ -136,7 +135,7 @@ int				preset_var(t_list *list, t_list *env, int set)
 		if (!(new = malloc(sizeof(t_tag))))
 			return (1);
 		if (!(str = malloc(1)))
-			return (1);
+			return (free_int(new));
 		str[0] = 0;
 		while (((t_tag *)(list->content))->str[i] != '=')
 			i++;

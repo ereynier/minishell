@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 06:29:53 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 11:23:59 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 04:29:10 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ static void	chdir_verif_one_dir(t_list *command_list, t_list *env, char *cp)
 	else if (((t_tag *)(command_list->next->next->content))->tag == -32 &&
 		!command_list->next->next->next)
 		chdir_do_one_dir(command_list, env, cp);
-	else if (((t_tag *)(command_list->next->next->content))->tag == -59 ||
-	((t_tag *)(command_list->next->next->content))->tag == -124)
+	else if (((t_tag *)(command_list->next->next->content))->tag < 0)
 		chdir_do_one_dir(command_list, env, cp);
 	else
 	{
@@ -93,7 +92,7 @@ int			cd_command(t_list *command_list, t_list *env)
 			chdir_home_cmd(command_list, env, cp, cp);
 		else
 		{
-			command_list = command_list->next;
+			command_list = skip_redir_go_next(command_list);
 			if (!command_list)
 				chdir_home_cmd(command_list, env, cp, cp);
 			else if (((t_tag *)(command_list->content))->tag == -59 ||

@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:47:23 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/14 15:58:58 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 00:10:11 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int		echo_line(t_list *list, int fd, int i, char *path)
 			list->next ? list = list->next : 0;
 			if (((t_tag *)(list->content)) &&
 			((t_tag *)(list->content))->tag == -32)
-				list = list->next;
+				list = skip_redir_go_next(list);
 			else
 				i = 0;
 		}
@@ -56,7 +56,7 @@ static t_list	*echo_command2(t_list *list, int n)
 		{
 			if (((t_tag *)(list->content))->tag == -32 &&
 			list->next)
-				list = list->next;
+				list = skip_redir_go_next(list);
 			else
 				n = 2;
 		}
@@ -80,7 +80,7 @@ int				echo_command(t_list *command_list, int fd, t_list *env)
 	cp = ((t_tag *)(env->content)) ? ((t_tag *)(env->content))->str : NULL;
 	if (command_list && command_list->next)
 	{
-		command_list = command_list->next;
+		command_list = skip_redir_go_next(command_list);
 		if (strcmp(((t_tag *)(command_list->content))->str, "-n") == 0)
 			n = 1;
 		command_list = echo_command2(command_list, n);

@@ -7,7 +7,7 @@ HEADER  =   includes
 
 LFLAGS  =   -I $(HEADER)
 
-SRCS    =	srcs/minishell.c srcs/commande.c srcs/get_pwd.c srcs/check_redir.c srcs/utils_redir.c \
+SRCS    =	srcs/minishell.c srcs/commande.c srcs/get_pwd.c srcs/check_redir.c \
 			srcs/parsing.c srcs/utils.c srcs/utils2.c srcs/utils_parsing.c srcs/utils_redir2.c \
 			srcs/dir_function.c srcs/dir_function_more.c  srcs/env_function.c srcs/commande_line.c \
 			srcs/echo_function.c srcs/execve_function.c srcs/env_utils.c srcs/exit_function.c \

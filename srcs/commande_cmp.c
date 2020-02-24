@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/16 20:15:47 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 14:14:05 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 12:40:32 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,17 @@ static int	command_cmp_do(t_list *list, t_list **command_list, t_list **env,
 	int		ret;
 
 	ret = 1;
-	if (!ft_strncmp(com, "cd", 3))
+	list ? list = skip_redir_to_go_next(list) : 0;
+	if ((!list && !com) || (!ft_strncmp(com, ">", 2) ||
+	!ft_strncmp(com, "<", 2) || !ft_strncmp(com, ">>", 3)))
+		ret = 0;
+	else if (!ft_strncmp(com, "cd", 3))
 		ret = cd_command(list, *env);
 	else if (!ft_strncmp(com, "env", 4))
 		ret = env_command(list, *env);
-	else if (!ft_strncmp(com, "echo", 5) ||
-			!ft_strncmp(com, "/bin/echo", 10))
+	else if (!ft_strncmp(com, "echo", 5))
 		ret = echo_command(list, 1, *env);
-	else if (!ft_strncmp(com, "pwd", 4) ||
-			!ft_strncmp(com, "/bin/pwd", 9))
+	else if (!ft_strncmp(com, "pwd", 4))
 		ret = pwd_command(list);
 	else if (!ft_strncmp(com, "export", 7))
 		ret = export_command(list, *env);
@@ -34,9 +36,6 @@ static int	command_cmp_do(t_list *list, t_list **command_list, t_list **env,
 		ret = unset_command(list, *env);
 	else if (!ft_strncmp(com, "exit", 5))
 		exit_command(list, command_list, env, 0);
-	else if (!ft_strncmp(com, ">", 2) || !ft_strncmp(com, "<", 2) ||
-			!ft_strncmp(com, ">>", 3))
-		ret = 0;
 	else
 		ret = execve_command(list, *env, com);
 	return (ret);
@@ -103,22 +102,24 @@ int			command_cmp(t_list *list, t_list **command_list, t_list **env,
 int			next_command_pipe(t_list *list, t_list **command_list, t_list **env,
 		char *com)
 {
-	t_list	**copy;
+	t_list	*copy;
 	t_list	*tmp;
 	int		ret;
 
-	ret = 0;
+	ret = -1;
 	tmp = *command_list;
 	while (tmp && ((t_tag *)(tmp->content))->tag != -59 &&
 			((t_tag *)(tmp->content))->tag != -124)
-		tmp = tmp->next;
+		tmp = skip_redir_go_next(tmp);
 	if (tmp && ((t_tag *)(tmp->content))->tag == -124)
 	{
-		tmp = tmp->next;
+		copy = tmp->next;
+		tmp = skip_redir_go_next(tmp);
 		com = ((t_tag *)(tmp->content))->str;
-		copy = &tmp;
-		list = tmp->next;
-		ret = command_cmp(list, copy, env, com);
+		while (com[++ret])
+			com[ret] = ft_tolower(com[ret]);
+		list = tmp;
+		ret = ft_verif_redir(list, &copy, env, com);
 	}
 	return (ret);
 }

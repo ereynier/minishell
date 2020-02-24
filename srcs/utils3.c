@@ -6,7 +6,7 @@
 /*   By: jacens <jacens@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/16 17:33:05 by jacens            #+#    #+#             */
-/*   Updated: 2020/02/17 13:58:59 by jacens           ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 00:29:05 by jacens           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,20 @@ int			ft_change_dup_write(t_list *lst)
 {
 	int		file;
 	int		stdout_bkp;
+	t_list	*tmp;
 
-	while (lst && ((t_tag *)(lst->content))->tag != -62 &&
-		((t_tag *)(lst->content))->tag != -63 &&
-		((t_tag *)(lst->content))->tag != -59 &&
+	tmp = NULL;
+	while (lst && ((t_tag *)(lst->content))->tag != -59 &&
 		((t_tag *)(lst->content))->tag != -124)
+	{
+		if (((t_tag *)(lst->content))->tag == -62 ||
+		((t_tag *)(lst->content))->tag == -63)
+			tmp = lst;
 		lst = lst->next;
-	if (!lst || (((t_tag *)(lst->content))->tag != -62 &&
-		((t_tag *)(lst->content))->tag != -63))
+	}
+	if (!tmp)
 		return (-1);
-	file = open(((t_tag *)(lst->next->content))->str, O_CREAT | O_WRONLY |
+	file = open(((t_tag *)(tmp->next->content))->str, O_CREAT | O_WRONLY |
 		O_APPEND, 0644);
 	stdout_bkp = dup(STDOUT_FILENO);
 	dup2(file, STDOUT_FILENO);
@@ -37,14 +41,19 @@ int			ft_change_dup_read(t_list *lst)
 {
 	int		file;
 	int		stdin_bkp;
+	t_list	*tmp;
 
-	while (lst && ((t_tag *)(lst->content))->tag != -60 &&
-	((t_tag *)(lst->content))->tag != -59 &&
-	((t_tag *)(lst->content))->tag != -124)
+	tmp = NULL;
+	while (lst && ((t_tag *)(lst->content))->tag != -59 &&
+		((t_tag *)(lst->content))->tag != -124)
+	{
+		if (((t_tag *)(lst->content))->tag == -60)
+			tmp = lst;
 		lst = lst->next;
-	if (!lst || (((t_tag *)(lst->content))->tag != -60))
+	}
+	if (!tmp)
 		return (-1);
-	file = open(((t_tag *)(lst->next->content))->str, O_RDONLY,
+	file = open(((t_tag *)(tmp->next->content))->str, O_RDONLY,
 	0644);
 	stdin_bkp = dup(STDIN_FILENO);
 	dup2(file, STDIN_FILENO);
